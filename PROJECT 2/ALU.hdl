@@ -1,0 +1,51 @@
+// 16-bit ALU
+CHIP ALU {
+    IN x[16], y[16], zx, zy, nx, ny, f, no;
+    OUT out[16], zr, ng;
+
+    PARTS:
+    // Step 1: Compute x and y inputs based on zx, zy, nx, ny
+    // x = zx ? 0 : x
+    Not(in=zx, out=zxNot);
+    Mux(a=x, b=false, sel=zxNot, out=xSel);
+    Not(in=nx, out=nxNot);
+    Not(in=xSel, out=xNot);
+    Mux(a=xNot, b=xSel, sel=nx, out=xFinal);
+
+    // y = zy ? 0 : y
+    Not(in=zy, out=zyNot);
+    Mux(a=y, b=false, sel=zyNot, out=ySel);
+    Not(in=ny, out=nyNot);
+    Not(in=ySel, out=yNot);
+    Mux(a=yNot, b=ySel, sel=ny, out=yFinal);
+
+    // Step 2: Compute out based on f (f = 0: AND, f = 1: ADD)
+    And(a=xFinal, b=yFinal, out=andOut);
+    Add(a=xFinal, b=yFinal, carryIn=false, sum=outSum, carry=outCarry);
+    Mux(a=andOut, b=outSum, sel=f, out=outFinal);
+
+    // Step 3: Negate the output if no = 1
+    Not(in=no, out=noNot);
+    Not(in=outFinal, out=outNot);
+    Mux(a=outNot, b=outFinal, sel=noNot, out=out);
+
+    // Step 4: Set zr (zero flag) and ng (negative flag)
+    Or(a=out[0], b=out[1], out=outOr1);
+    Or(a=out[2], b=out[3], out=outOr2);
+    Or(a=out[4], b=out[5], out=outOr3);
+    Or(a=out[6], b=out[7], out=outOr4);
+    Or(a=out[8], b=out[9], out=outOr5);
+    Or(a=out[10], b=out[11], out=outOr6);
+    Or(a=out[12], b=out[13], out=outOr7);
+    Or(a=out[14], b=out[15], out=outOr8);
+    Or(a=outOr1, b=outOr2, out=outOr9);
+    Or(a=outOr3, b=outOr4, out=outOr10);
+    Or(a=outOr5, b=outOr6, out=outOr11);
+    Or(a=outOr7, b=outOr8, out=outOr12);
+    Or(a=outOr9, b=outOr10, out=outOr13);
+    Or(a=outOr11, b=outOr12, out=outOr14);
+    Not(in=outOr14, out=zr);
+    
+    // Set ng (negative flag)
+    And(a=out[15], b=true, out=ng);
+}

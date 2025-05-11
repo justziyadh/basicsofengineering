@@ -1,0 +1,21 @@
+// 64x16 RAM Chip (64 memory locations, each 16 bits wide)
+CHIP RAM64 {
+    IN in[16], address[6], load, clk;
+    OUT out[16];
+
+    PARTS:
+    // 64 memory locations
+    RAM8(in=in, address=address[3..0], load=load, clk=clk, out=out0);
+    RAM8(in=in, address=address[3..0], load=load, clk=clk, out=out1);
+    RAM8(in=in, address=address[3..0], load=load, clk=clk, out=out2);
+    RAM8(in=in, address=address[3..0], load=load, clk=clk, out=out3);
+    RAM8(in=in, address=address[3..0], load=load, clk=clk, out=out4);
+    RAM8(in=in, address=address[3..0], load=load, clk=clk, out=out5);
+    RAM8(in=in, address=address[3..0], load=load, clk=clk, out=out6);
+    RAM8(in=in, address=address[3..0], load=load, clk=clk, out=out7);
+
+    Mux16(a=out0, b=out1, sel=address[5], out=out);
+    Mux16(a=out2, b=out3, sel=address[5], out=out);
+    Mux16(a=out4, b=out5, sel=address[5], out=out);
+    Mux16(a=out6, b=out7, sel=address[5], out=out);
+}

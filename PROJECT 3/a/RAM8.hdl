@@ -1,0 +1,39 @@
+// 8x16 RAM Chip (8 memory locations, each 16 bits wide)
+CHIP RAM8 {
+    IN in[16], address[3], load, clk;
+    OUT out[16];
+
+    PARTS:
+    // 8 individual DFFs for each memory location
+    // Memory location 0
+    DFF(in=in, out=out0, clk=clk, reset=false);
+    Mux(a=out0, b=in, sel=load & (address == 0), out=out);
+
+    // Memory location 1
+    DFF(in=in, out=out1, clk=clk, reset=false);
+    Mux(a=out1, b=in, sel=load & (address == 1), out=out);
+
+    // Memory location 2
+    DFF(in=in, out=out2, clk=clk, reset=false);
+    Mux(a=out2, b=in, sel=load & (address == 2), out=out);
+
+    // Memory location 3
+    DFF(in=in, out=out3, clk=clk, reset=false);
+    Mux(a=out3, b=in, sel=load & (address == 3), out=out);
+
+    // Memory location 4
+    DFF(in=in, out=out4, clk=clk, reset=false);
+    Mux(a=out4, b=in, sel=load & (address == 4), out=out);
+
+    // Memory location 5
+    DFF(in=in, out=out5, clk=clk, reset=false);
+    Mux(a=out5, b=in, sel=load & (address == 5), out=out);
+
+    // Memory location 6
+    DFF(in=in, out=out6, clk=clk, reset=false);
+    Mux(a=out6, b=in, sel=load & (address == 6), out=out);
+
+    // Memory location 7
+    DFF(in=in, out=out7, clk=clk, reset=false);
+    Mux(a=out7, b=in, sel=load & (address == 7), out=out);
+}

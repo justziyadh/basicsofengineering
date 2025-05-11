@@ -1,0 +1,15 @@
+// Half Adder using NAND gates
+CHIP HalfAdder {
+    IN a, b;
+    OUT sum, carry;
+
+    PARTS:
+    // Compute the sum using XOR (implemented with NAND gates)
+    Nand(a=a, b=b, out=nandAB);
+    Nand(a=a, b=nandAB, out=sumPart1);
+    Nand(a=b, b=nandAB, out=sumPart2);
+    Nand(a=sumPart1, b=sumPart2, out=sum);
+    
+    // Compute the carry using AND (implemented with NAND gates)
+    Nand(a=a, b=b, out=carry);
+}

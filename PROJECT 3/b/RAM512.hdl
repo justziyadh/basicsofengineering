@@ -1,0 +1,22 @@
+// 512 x 16 RAM Chip (512 memory locations, each 16 bits wide)
+CHIP RAM512 {
+    IN in[16], address[8], load, clk;
+    OUT out[16];
+
+    PARTS:
+    // Using RAM64 to construct the 512x16 RAM from 64x16 RAMs
+    RAM64(in=in, address=address[5..0], load=load, clk=clk, out=out0);
+    RAM64(in=in, address=address[5..0], load=load, clk=clk, out=out1);
+    RAM64(in=in, address=address[5..0], load=load, clk=clk, out=out2);
+    RAM64(in=in, address=address[5..0], load=load, clk=clk, out=out3);
+    RAM64(in=in, address=address[5..0], load=load, clk=clk, out=out4);
+    RAM64(in=in, address=address[5..0], load=load, clk=clk, out=out5);
+    RAM64(in=in, address=address[5..0], load=load, clk=clk, out=out6);
+    RAM64(in=in, address=address[5..0], load=load, clk=clk, out=out7);
+
+    // Using address bits to select the RAM64 bank
+    Mux16(a=out0, b=out1, sel=address[7], out=out);
+    Mux16(a=out2, b=out3, sel=address[7], out=out);
+    Mux16(a=out4, b=out5, sel=address[7], out=out);
+    Mux16(a=out6, b=out7, sel=address[7], out=out);
+}

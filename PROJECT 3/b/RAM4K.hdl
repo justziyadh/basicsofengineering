@@ -1,0 +1,34 @@
+// 4K x 16 RAM Chip (4096 memory locations, each 16 bits wide)
+CHIP RAM4K {
+    IN in[16], address[12], load, clk;
+    OUT out[16];
+
+    PARTS:
+    // Using RAM64 to construct the 4K RAM from 64x16 RAMs
+    RAM64(in=in, address=address[5..0], load=load, clk=clk, out=out0);
+    RAM64(in=in, address=address[5..0], load=load, clk=clk, out=out1);
+    RAM64(in=in, address=address[5..0], load=load, clk=clk, out=out2);
+    RAM64(in=in, address=address[5..0], load=load, clk=clk, out=out3);
+    RAM64(in=in, address=address[5..0], load=load, clk=clk, out=out4);
+    RAM64(in=in, address=address[5..0], load=load, clk=clk, out=out5);
+    RAM64(in=in, address=address[5..0], load=load, clk=clk, out=out6);
+    RAM64(in=in, address=address[5..0], load=load, clk=clk, out=out7);
+    RAM64(in=in, address=address[5..0], load=load, clk=clk, out=out8);
+    RAM64(in=in, address=address[5..0], load=load, clk=clk, out=out9);
+    RAM64(in=in, address=address[5..0], load=load, clk=clk, out=out10);
+    RAM64(in=in, address=address[5..0], load=load, clk=clk, out=out11);
+    RAM64(in=in, address=address[5..0], load=load, clk=clk, out=out12);
+    RAM64(in=in, address=address[5..0], load=load, clk=clk, out=out13);
+    RAM64(in=in, address=address[5..0], load=load, clk=clk, out=out14);
+    RAM64(in=in, address=address[5..0], load=load, clk=clk, out=out15);
+
+    // Using address bits to select the RAM64 bank
+    Mux16(a=out0, b=out1, sel=address[11], out=out);
+    Mux16(a=out2, b=out3, sel=address[11], out=out);
+    Mux16(a=out4, b=out5, sel=address[11], out=out);
+    Mux16(a=out6, b=out7, sel=address[11], out=out);
+    Mux16(a=out8, b=out9, sel=address[11], out=out);
+    Mux16(a=out10, b=out11, sel=address[11], out=out);
+    Mux16(a=out12, b=out13, sel=address[11], out=out);
+    Mux16(a=out14, b=out15, sel=address[11], out=out);
+}

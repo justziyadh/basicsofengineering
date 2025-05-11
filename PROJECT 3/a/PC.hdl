@@ -1,0 +1,17 @@
+// 16-bit Program Counter (PC) Chip
+CHIP PC {
+    IN load, inc, clk, reset;
+    IN in[16];
+    OUT out[16];
+
+    PARTS:
+    // Memory: Store the 16-bit value
+    DFF(in=in, out=out, clk=clk, reset=reset);
+
+    // Increment Logic
+    And(a=inc, b=true, out=incTrue);
+    Mux(a=out+1, b=out, sel=incTrue, out=in);
+
+    // Load Logic: Load new value if 'load' is true
+    Mux(a=in, b=out, sel=load, out=in);
+}

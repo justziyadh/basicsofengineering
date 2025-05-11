@@ -1,0 +1,48 @@
+CHIP CPU {
+    IN inM[16], instruction[16], reset;
+    OUT outM[16], writeM, addressM[15], pc[15];
+
+    PARTS:
+    // Instruction fields
+    Not(in=instruction[15], out=isCInstruction);
+
+    // A-register logic
+    And(a=instruction[15], b=instruction[5], out=aLoadFromALU);
+    Not(in=instruction[15], out=aLoadFromAInst);
+    Or(a=aLoadFromALU, b=aLoadFromAInst, out=aLoad);
+
+    Mux16(a=instruction, b=aluOut, sel=instruction[15], out=aIn);
+    Register(in=aIn, load=aLoad, out=aOut);
+
+    // A/M selector for ALU
+    Mux16(a=aOut, b=inM, sel=instruction[12], out=aluY);
+
+    // D-register
+    And(a=instruction[15], b=instruction[4], out=dLoad);
+    Register(in=aluOut, load=dLoad, out=dOut);
+
+    // ALU
+    ALU(x=dOut, y=aluY, zx=instruction[11], nx=instruction[10],
+        zy=instruction[9], ny=instruction[8], f=instruction[7], no=instruction[6],
+        out=aluOut, zr=zr, ng=ng);
+
+    // Output
+    And(a=instruction[15], b=instruction[3], out=writeM);
+    And16(a=aluOut, b=true16, out=outM); // outM = aluOut
+    And16(a=aOut, b=true16, out=addressM); // addressM = A-register
+
+    // PC logic
+    Not(in=instruction[15], out=isAInstr);
+    And(a=instruction[15], b=instruction[0], out=jmp);
+    And(a=instruction[15], b=instruction[1], out=je);
+    And(a=instruction[15], b=instruction[2], out=jl);
+
+    And(a=je, b=zr, out=jeTrue);
+    And(a=jl, b=ng, out=jlTrue);
+    And(a=jmp, b=true, out=jmpTrue); // Always true if jmp bit is set
+
+    Or(a=jeTrue, b=jlTrue, out=cond1);
+    Or(a=cond1, b=jmpTrue, out=shouldJump);
+
+    PC(in=aOut, load=shouldJump, inc=true, reset=reset, out=pc);
+}

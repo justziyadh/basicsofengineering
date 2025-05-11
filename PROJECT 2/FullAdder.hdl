@@ -1,0 +1,22 @@
+// Full Adder using NAND gates
+CHIP FullAdder {
+    IN a, b, cin;
+    OUT sum, carry;
+
+    PARTS:
+    // Step 1: Compute the sum using XOR (implemented with NAND gates)
+    Nand(a=a, b=b, out=nandAB);
+    Nand(a=a, b=nandAB, out=sumPart1);
+    Nand(a=b, b=nandAB, out=sumPart2);
+    Nand(a=sumPart1, b=sumPart2, out(sum1));
+
+    Nand(a=sum1, b=cin, out=nandCin);
+    Nand(a=sum1, b=nandCin, out=sumPart3);
+    Nand(a=cin, b=nandCin, out=sumPart4);
+    Nand(a=sumPart3, b=sumPart4, out(sum));
+
+    // Step 2: Compute the carry using AND (implemented with NAND gates)
+    Nand(a=a, b=b, out=carryPart1);
+    Nand(a=carryPart1, b=cin, out=carryPart2);
+    Nand(a=carryPart1, b=carryPart2, out=carry);
+}

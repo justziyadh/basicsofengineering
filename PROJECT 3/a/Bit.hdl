@@ -1,0 +1,9 @@
+// 1-bit Bit Chip
+CHIP Bit {
+    IN in;
+    OUT out;
+
+    PARTS:
+    // Pass the input directly to the output
+    Mux(a=in, b=false, sel=in, out=out); // example of passing input
+}

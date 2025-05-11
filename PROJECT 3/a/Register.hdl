@@ -1,0 +1,27 @@
+// 16-bit Register Chip
+CHIP Register {
+    IN in[16], load, clk;
+    OUT out[16];
+
+    PARTS:
+    // 16 D Flip-Flops to store the 16-bit value
+    DFF(in=in, out=out[0], clk=clk, reset=false);
+    DFF(in=in, out=out[1], clk=clk, reset=false);
+    DFF(in=in, out=out[2], clk=clk, reset=false);
+    DFF(in=in, out=out[3], clk=clk, reset=false);
+    DFF(in=in, out=out[4], clk=clk, reset=false);
+    DFF(in=in, out=out[5], clk=clk, reset=false);
+    DFF(in=in, out=out[6], clk=clk, reset=false);
+    DFF(in=in, out=out[7], clk=clk, reset=false);
+    DFF(in=in, out=out[8], clk=clk, reset=false);
+    DFF(in=in, out=out[9], clk=clk, reset=false);
+    DFF(in=in, out=out[10], clk=clk, reset=false);
+    DFF(in=in, out=out[11], clk=clk, reset=false);
+    DFF(in=in, out=out[12], clk=clk, reset=false);
+    DFF(in=in, out=out[13], clk=clk, reset=false);
+    DFF(in=in, out=out[14], clk=clk, reset=false);
+    DFF(in=in, out=out[15], clk=clk, reset=false);
+
+    // Load logic: Update register when load is true
+    Mux16(a=out, b=in, sel=load, out=out);
+}
